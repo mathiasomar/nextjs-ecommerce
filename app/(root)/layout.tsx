@@ -1,3 +1,4 @@
+import FooterSection from "@/components/footer";
 import React from "react";
 
 const layout = ({ children }: { children: React.ReactNode }) => {
@@ -5,7 +6,7 @@ const layout = ({ children }: { children: React.ReactNode }) => {
     <>
       <div>navbar</div>
       {children}
-      <div>Footer</div>
+      <FooterSection />
     </>
   );
 };
