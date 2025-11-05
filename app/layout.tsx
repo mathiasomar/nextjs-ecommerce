@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
-import { cookies } from "next/headers";
+import { Suspense } from "react";
+import ThemeInit from "@/components/theme-init";
+import ThemeHandler from "@/components/theme-handler";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -20,32 +22,27 @@ export const metadata: Metadata = {
   description: "Your one-stop shop for the latest fashion trends.",
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // Read theme cookie on the server to render consistent html attributes
-  const cookieStore = await cookies();
-  const themeCookie =
-    cookieStore.get("theme")?.value ||
-    cookieStore.get("next-theme")?.value ||
-    cookieStore.get("next-themes")?.value ||
-    "light";
-
-  const initialTheme = themeCookie === "system" ? "light" : themeCookie;
+  // Don't read cookies here to avoid blocking the route.
+  // Theme will be initialized by the ThemeInit script in <head>.
+  const initialTheme: string | undefined = undefined;
 
   return (
-    <html
-      lang="en"
-      className={initialTheme}
-      style={{ colorScheme: initialTheme }}
-    >
+    <html lang="en" style={{ overflowX: "hidden" }} suppressHydrationWarning>
+      <head>
+        <Suspense>
+          <ThemeInit />
+        </Suspense>
+      </head>
       <body
         className={`${inter.variable} ${playfair.variable} font-sans antialiased`}
         suppressHydrationWarning
       >
-        {children}
+        <ThemeHandler theme={initialTheme}>{children}</ThemeHandler>
       </body>
     </html>
   );

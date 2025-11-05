@@ -26,7 +26,7 @@ import UserLogout from "./user-logout";
 
 const Navbar = () => {
   return (
-    <div className="w-screen py-5 bg-white dark:bg-gray-800">
+    <div className="sticky top-0 z-2 w-screen py-5 bg-white dark:bg-gray-800">
       <Container className="flex items-center justify-between">
         <Link href="/" className="flex items-center gap-1">
           <Image src="/logo.png" alt="logo" width={25} height={25} />
