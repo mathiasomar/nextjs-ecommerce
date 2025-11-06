@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import Image from "next/image";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { set, z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { error } from "console";
@@ -65,6 +65,19 @@ export default function SignUpPage() {
         toast.success("Sign Up successful! Please check your email.");
         // router.push("/dashboard");
       }
+    } catch (err) {
+      setError("An unexpected error occurred. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSignUpGoogle = async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      // Implement Google Sign-Up logic here
     } catch (err) {
       setError("An unexpected error occurred. Please try again.");
     } finally {
@@ -173,7 +186,11 @@ export default function SignUpPage() {
           </div>
 
           <div className="grid grid-cols-2 gap-3">
-            <Button type="button" variant="outline">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleSignUpGoogle}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="0.98em"

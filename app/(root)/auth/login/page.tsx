@@ -48,7 +48,7 @@ export default function LoginPage() {
       if (result.error) {
         toast.error(result.error.message || "Sign Up failed");
       } else {
-        toast.success("Sign Up successful! Please check your email.");
+        toast.success("Sign In successful! Redirecting to dashboard...");
         // router.push("/dashboard");
       }
     } catch (err) {
