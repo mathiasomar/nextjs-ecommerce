@@ -6,10 +6,9 @@ import { Label } from "@/components/ui/label";
 import Image from "next/image";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
-import { set, z } from "zod";
+import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
-import { error } from "console";
 import { signIn, signUp, useSession } from "@/lib/auth-client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -36,7 +35,7 @@ export default function SignUpPage() {
   const router = useRouter();
   const { data: session } = useSession();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  // const [error, setError] = useState<string | null>(null);
   const [googleLoading, setGoogleLoading] = useState(false);
   const {
     register,
@@ -50,7 +49,7 @@ export default function SignUpPage() {
 
   const onSubmit = async (data: SignUpForm) => {
     setLoading(true);
-    setError(null);
+    // setError(null);
 
     try {
       const result = await signUp.email({
