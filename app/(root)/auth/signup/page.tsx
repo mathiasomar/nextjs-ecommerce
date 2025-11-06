@@ -8,9 +8,9 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { error } from "console";
-import { signUp } from "@/lib/auth-client";
+import { signUp, useSession } from "@/lib/auth-client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Spinner } from "@/components/ui/spinner";
@@ -34,6 +34,7 @@ const signUpSchema = z
 
 export default function SignUpPage() {
   const router = useRouter();
+  const { data: session } = useSession();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const {
@@ -55,13 +56,14 @@ export default function SignUpPage() {
         email: data.email,
         password: data.password,
         name: data.name,
+        callbackURL: "/dashboard",
       });
 
       if (result.error) {
         toast.error(result.error.message || "Sign Up failed");
       } else {
         toast.success("Sign Up successful! Please check your email.");
-        router.push("/dashboard");
+        // router.push("/dashboard");
       }
     } catch (err) {
       setError("An unexpected error occurred. Please try again.");
@@ -69,6 +71,12 @@ export default function SignUpPage() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (session?.user) {
+      router.push("/dashboard");
+    }
+  }, [session, router]);
 
   return (
     <section className="flex min-h-auto bg-zinc-50 px-4 py-16 md:py-32 dark:bg-transparent">

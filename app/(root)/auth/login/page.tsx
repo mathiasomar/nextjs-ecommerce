@@ -8,11 +8,12 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 // import { useRouter } from "next/navigation";
 import { Spinner } from "@/components/ui/spinner";
-import { signIn } from "@/lib/auth-client";
+import { signIn, useSession } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -22,7 +23,9 @@ const loginSchema = z.object({
 type LoginForm = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
-  // const router = useRouter();
+  const router = useRouter();
+
+  const { data: session } = useSession();
   const [loading, setLoading] = useState(false);
   const {
     register,
@@ -54,6 +57,12 @@ export default function LoginPage() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (session?.user) {
+      router.push("/dashboard");
+    }
+  }, [session, router]);
 
   return (
     <section className="flex min-h-auto bg-zinc-50 px-4 py-16 md:py-32 dark:bg-transparent">
