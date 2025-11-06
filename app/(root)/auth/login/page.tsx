@@ -10,8 +10,9 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 import { Spinner } from "@/components/ui/spinner";
+import { signIn } from "@/lib/auth-client";
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -21,7 +22,7 @@ const loginSchema = z.object({
 type LoginForm = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
-  const router = useRouter();
+  // const router = useRouter();
   const [loading, setLoading] = useState(false);
   const {
     register,
@@ -35,20 +36,20 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      // Replace with actual login logic
-      const result = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+      const result = await signIn.email({
+        email: data.email,
+        password: data.password,
+        callbackURL: "/dashboard",
       });
 
-      if (!result.ok) {
-        const errorData = await result.json();
-        toast.error(errorData.message || "Login failed");
+      if (result.error) {
+        toast.error(result.error.message || "Sign Up failed");
       } else {
-        toast.success("Login successful! Redirecting...");
-        router.push("/dashboard");
+        toast.success("Sign Up successful! Please check your email.");
+        // router.push("/dashboard");
       }
+    } catch (err) {
+      toast.error("An unexpected error occurred. Please try again.");
     } finally {
       setLoading(false);
     }
