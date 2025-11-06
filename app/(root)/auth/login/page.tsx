@@ -27,6 +27,7 @@ export default function LoginPage() {
 
   const { data: session } = useSession();
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
   const {
     register,
     handleSubmit,
@@ -52,7 +53,11 @@ export default function LoginPage() {
         // router.push("/dashboard");
       }
     } catch (err) {
-      toast.error("An unexpected error occurred. Please try again.");
+      toast.error(
+        err instanceof Error
+          ? err.message
+          : "An unexpected error occurred. Please try again."
+      );
     } finally {
       setLoading(false);
     }
@@ -63,6 +68,25 @@ export default function LoginPage() {
       router.push("/dashboard");
     }
   }, [session, router]);
+
+  const handleGoogleSignIn = async () => {
+    setGoogleLoading(true);
+
+    try {
+      await signIn.social({
+        provider: "google",
+        callbackURL: "/dashboard",
+      });
+    } catch (error) {
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "An unexpected error occurred. Please try again."
+      );
+    } finally {
+      setGoogleLoading(false);
+    }
+  };
 
   return (
     <section className="flex min-h-auto bg-zinc-50 px-4 py-16 md:py-32 dark:bg-transparent">
@@ -97,6 +121,12 @@ export default function LoginPage() {
                 <Label htmlFor="pwd" className="text-sm">
                   Password
                 </Label>
+                <Link
+                  href="/auth/forgot-password"
+                  className="text-sm text-muted-foreground hover:text-primary"
+                >
+                  Forgot Password?
+                </Link>
               </div>
               <Input
                 type="password"
@@ -111,7 +141,11 @@ export default function LoginPage() {
               )}
             </div>
 
-            <Button disabled={loading} type="submit" className="w-full">
+            <Button
+              disabled={loading}
+              type="submit"
+              className="w-full cursor-pointer"
+            >
               {loading ? (
                 <>
                   <Spinner /> Loading...
@@ -130,8 +164,14 @@ export default function LoginPage() {
             <hr className="border-dashed" />
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
-            <Button type="button" variant="outline">
+          <div className="w-full">
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full cursor-pointer"
+              onClick={handleGoogleSignIn}
+              disabled={googleLoading}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="0.98em"
@@ -156,26 +196,6 @@ export default function LoginPage() {
                 ></path>
               </svg>
               <span>Google</span>
-            </Button>
-            <Button type="button" variant="outline">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="1em"
-                height="1em"
-                viewBox="0 0 256 256"
-              >
-                <path fill="#f1511b" d="M121.666 121.666H0V0h121.666z"></path>
-                <path fill="#80cc28" d="M256 121.666H134.335V0H256z"></path>
-                <path
-                  fill="#00adef"
-                  d="M121.663 256.002H0V134.336h121.663z"
-                ></path>
-                <path
-                  fill="#fbbc09"
-                  d="M256 256.002H134.335V134.336H256z"
-                ></path>
-              </svg>
-              <span>Microsoft</span>
             </Button>
           </div>
         </div>

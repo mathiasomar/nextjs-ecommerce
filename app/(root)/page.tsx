@@ -1,6 +1,7 @@
 import CategoryMenu from "@/components/category-menu";
 import Container from "@/components/container";
 import Features from "@/components/features";
+import ProductListing from "@/components/product-listing";
 import HeroSection from "@/components/sections/hero-section";
 import SectionHeader from "@/components/sections/section-header";
 import { Separator } from "@/components/ui/separator";
@@ -24,6 +25,7 @@ export default function Home() {
 
           {/* Category Tab */}
           <CategoryMenu />
+          <ProductListing />
         </Container>
       </section>
     </div>

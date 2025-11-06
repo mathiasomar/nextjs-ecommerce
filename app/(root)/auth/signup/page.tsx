@@ -10,7 +10,7 @@ import { set, z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { error } from "console";
-import { signUp, useSession } from "@/lib/auth-client";
+import { signIn, signUp, useSession } from "@/lib/auth-client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Spinner } from "@/components/ui/spinner";
@@ -37,6 +37,7 @@ export default function SignUpPage() {
   const { data: session } = useSession();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [googleLoading, setGoogleLoading] = useState(false);
   const {
     register,
     handleSubmit,
@@ -66,22 +67,32 @@ export default function SignUpPage() {
         // router.push("/dashboard");
       }
     } catch (err) {
-      setError("An unexpected error occurred. Please try again.");
+      toast.error(
+        err instanceof Error
+          ? err.message
+          : "An unexpected error occurred. Please try again."
+      );
     } finally {
       setLoading(false);
     }
   };
 
-  const handleSignUpGoogle = async () => {
-    setLoading(true);
-    setError(null);
+  const handleGoogleSignUp = async () => {
+    setGoogleLoading(true);
 
     try {
-      // Implement Google Sign-Up logic here
-    } catch (err) {
-      setError("An unexpected error occurred. Please try again.");
+      await signIn.social({
+        provider: "google",
+        callbackURL: "/dashboard",
+      });
+    } catch (error) {
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "An unexpected error occurred. Please try again."
+      );
     } finally {
-      setLoading(false);
+      setGoogleLoading(false);
     }
   };
 
@@ -166,7 +177,11 @@ export default function SignUpPage() {
               )}
             </div>
 
-            <Button disabled={loading} type="submit" className="w-full">
+            <Button
+              disabled={loading}
+              type="submit"
+              className="w-full cursor-pointer"
+            >
               {loading ? (
                 <>
                   <Spinner /> Loading...
@@ -185,11 +200,13 @@ export default function SignUpPage() {
             <hr className="border-dashed" />
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="w-full">
             <Button
               type="button"
               variant="outline"
-              onClick={handleSignUpGoogle}
+              onClick={handleGoogleSignUp}
+              className="w-full cursor-pointer"
+              disabled={googleLoading}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -215,26 +232,6 @@ export default function SignUpPage() {
                 ></path>
               </svg>
               <span>Google</span>
-            </Button>
-            <Button type="button" variant="outline">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="1em"
-                height="1em"
-                viewBox="0 0 256 256"
-              >
-                <path fill="#f1511b" d="M121.666 121.666H0V0h121.666z"></path>
-                <path fill="#80cc28" d="M256 121.666H134.335V0H256z"></path>
-                <path
-                  fill="#00adef"
-                  d="M121.663 256.002H0V134.336h121.663z"
-                ></path>
-                <path
-                  fill="#fbbc09"
-                  d="M256 256.002H134.335V134.336H256z"
-                ></path>
-              </svg>
-              <span>Microsoft</span>
             </Button>
           </div>
         </div>
