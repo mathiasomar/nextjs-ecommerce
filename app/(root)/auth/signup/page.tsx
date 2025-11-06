@@ -1,14 +1,79 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Image from "next/image";
 import Link from "next/link";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
+import { error } from "console";
+import { signUp } from "@/lib/auth-client";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { Spinner } from "@/components/ui/spinner";
+
+const signUpSchema = z
+  .object({
+    name: z.string().min(3, "Name must be at least 3 characters long"),
+    email: z.string().email("Invalid email address"),
+    password: z.string().min(8, "Password must be at least 8 characters long"),
+    confpassword: z.string(),
+  })
+  .superRefine(({ password, confpassword }, ctx) => {
+    if (password !== confpassword) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["confpassword"],
+        message: "Passwords do not match",
+      });
+    }
+  });
 
 export default function SignUpPage() {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(signUpSchema),
+  });
+
+  type SignUpForm = z.infer<typeof signUpSchema>;
+
+  const onSubmit = async (data: SignUpForm) => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const result = await signUp.email({
+        email: data.email,
+        password: data.password,
+        name: data.name,
+      });
+
+      if (result.error) {
+        toast.error(result.error.message || "Sign Up failed");
+      } else {
+        toast.success("Sign Up successful! Please check your email.");
+        router.push("/dashboard");
+      }
+    } catch (err) {
+      setError("An unexpected error occurred. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <section className="flex min-h-auto bg-zinc-50 px-4 py-16 md:py-32 dark:bg-transparent">
       <form
-        action=""
+        onSubmit={handleSubmit(onSubmit)}
         className="bg-muted m-auto h-fit w-full max-w-sm overflow-hidden rounded-[calc(var(--radius)+.125rem)] border shadow-md shadow-zinc-950/5 dark:[--color-muted:var(--color-zinc-900)]"
       >
         <div className="bg-card -m-px rounded-[calc(var(--radius)+.125rem)] border p-8 pb-6">
@@ -24,16 +89,22 @@ export default function SignUpPage() {
 
           <div className="mt-6 space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="email" className="block text-sm">
-                Username
+              <Label htmlFor="name" className="block text-sm">
+                Name
               </Label>
-              <Input type="text" required name="username" id="email" />
+              <Input type="text" id="name" {...register("name")} />
+              {errors.name && (
+                <p className="text-red-500 text-sm">{errors.name.message}</p>
+              )}
             </div>
             <div className="space-y-2">
               <Label htmlFor="email" className="block text-sm">
                 Email Address
               </Label>
-              <Input type="email" required name="email" id="email" />
+              <Input type="email" id="email" {...register("email")} />
+              {errors.email && (
+                <p className="text-red-500 text-sm">{errors.email.message}</p>
+              )}
             </div>
 
             <div className="space-y-0.5">
@@ -44,14 +115,45 @@ export default function SignUpPage() {
               </div>
               <Input
                 type="password"
-                required
-                name="pwd"
                 id="pwd"
+                {...register("password")}
                 className="input sz-md variant-mixed"
               />
+              {errors.password && (
+                <p className="text-red-500 text-sm">
+                  {errors.password.message}
+                </p>
+              )}
             </div>
 
-            <Button className="w-full">Sign Up</Button>
+            <div className="space-y-0.5">
+              <div className="flex items-center justify-between">
+                <Label htmlFor="confpwd" className="text-sm">
+                  Confirm Password
+                </Label>
+              </div>
+              <Input
+                type="password"
+                id="confpwd"
+                {...register("confpassword")}
+                className="input sz-md variant-mixed"
+              />
+              {errors.confpassword && (
+                <p className="text-red-500 text-sm">
+                  {errors.confpassword.message}
+                </p>
+              )}
+            </div>
+
+            <Button disabled={loading} type="submit" className="w-full">
+              {loading ? (
+                <>
+                  <Spinner /> Loading...
+                </>
+              ) : (
+                "Sign Up"
+              )}
+            </Button>
           </div>
 
           <div className="my-6 grid grid-cols-[1fr_auto_1fr] items-center gap-3">

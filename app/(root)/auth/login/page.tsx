@@ -1,14 +1,63 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Image from "next/image";
 import Link from "next/link";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { Spinner } from "@/components/ui/spinner";
+
+const loginSchema = z.object({
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(8, "Password must be at least 8 characters long"),
+});
+
+type LoginForm = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginForm>({
+    resolver: zodResolver(loginSchema),
+  });
+
+  const onSubmit = async (data: LoginForm) => {
+    setLoading(true);
+
+    try {
+      // Replace with actual login logic
+      const result = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      if (!result.ok) {
+        const errorData = await result.json();
+        toast.error(errorData.message || "Login failed");
+      } else {
+        toast.success("Login successful! Redirecting...");
+        router.push("/dashboard");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <section className="flex min-h-auto bg-zinc-50 px-4 py-16 md:py-32 dark:bg-transparent">
       <form
-        action=""
+        onSubmit={handleSubmit(onSubmit)}
         className="bg-muted m-auto h-fit w-full max-w-sm overflow-hidden rounded-[calc(var(--radius)+.125rem)] border shadow-md shadow-zinc-950/5 dark:[--color-muted:var(--color-zinc-900)]"
       >
         <div className="bg-card -m-px rounded-[calc(var(--radius)+.125rem)] border p-8 pb-6">
@@ -25,9 +74,12 @@ export default function LoginPage() {
           <div className="mt-6 space-y-6">
             <div className="space-y-2">
               <Label htmlFor="email" className="block text-sm">
-                Username
+                Email Address
               </Label>
-              <Input type="email" required name="email" id="email" />
+              <Input type="email" id="email" {...register("email")} />
+              {errors.email && (
+                <p className="text-red-500 text-sm">{errors.email.message}</p>
+              )}
             </div>
 
             <div className="space-y-0.5">
@@ -35,25 +87,29 @@ export default function LoginPage() {
                 <Label htmlFor="pwd" className="text-sm">
                   Password
                 </Label>
-                <Button asChild variant="link" size="sm">
-                  <Link
-                    href="#"
-                    className="link intent-info variant-ghost text-sm"
-                  >
-                    Forgot your Password ?
-                  </Link>
-                </Button>
               </div>
               <Input
                 type="password"
-                required
-                name="pwd"
                 id="pwd"
+                {...register("password")}
                 className="input sz-md variant-mixed"
               />
+              {errors.password && (
+                <p className="text-red-500 text-sm">
+                  {errors.password.message}
+                </p>
+              )}
             </div>
 
-            <Button className="w-full">Sign In</Button>
+            <Button disabled={loading} type="submit" className="w-full">
+              {loading ? (
+                <>
+                  <Spinner /> Loading...
+                </>
+              ) : (
+                "Sign In"
+              )}
+            </Button>
           </div>
 
           <div className="my-6 grid grid-cols-[1fr_auto_1fr] items-center gap-3">

@@ -4,6 +4,7 @@ import "./globals.css";
 import { Suspense } from "react";
 import ThemeInit from "@/components/theme-init";
 import ThemeHandler from "@/components/theme-handler";
+import { Toaster } from "sonner";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -42,7 +43,10 @@ export default function RootLayout({
         className={`${inter.variable} ${playfair.variable} font-sans antialiased`}
         suppressHydrationWarning
       >
-        <ThemeHandler theme={initialTheme}>{children}</ThemeHandler>
+        <ThemeHandler theme={initialTheme}>
+          {children}
+          <Toaster position="top-center" />
+        </ThemeHandler>
       </body>
     </html>
   );
