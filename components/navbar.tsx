@@ -61,7 +61,7 @@ const Navbar = () => {
             </Link>
 
             {/* Profile */}
-            <DropdownMenu>
+            {/* <DropdownMenu>
               <DropdownMenuTrigger>
                 <Avatar>
                   <AvatarImage
@@ -98,7 +98,13 @@ const Navbar = () => {
                   <UserLogout />
                 </DropdownMenuItem>
               </DropdownMenuContent>
-            </DropdownMenu>
+            </DropdownMenu> */}
+
+            <Button asChild size="sm">
+              <Link href="/auth/login" className="capitalize">
+                login
+              </Link>
+            </Button>
           </div>
           <MobileMenu />
         </div>
