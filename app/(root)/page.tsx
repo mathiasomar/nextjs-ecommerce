@@ -1,4 +1,3 @@
-import CategoryMenu from "@/components/category-menu";
 import Container from "@/components/container";
 import Features from "@/components/features";
 import ProductListing from "@/components/product-listing";
@@ -24,7 +23,6 @@ export default function Home() {
           <Separator className="my-4" />
 
           {/* Category Tab */}
-          <CategoryMenu />
           <ProductListing />
         </Container>
       </section>

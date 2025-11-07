@@ -1,51 +1,90 @@
-type Category = {
-  id: number;
-  name: string;
-  slag: string;
-};
+"use client";
 
-const categoryMenu = [
+import { cn } from "@/lib/utils";
+import {
+  Footprints,
+  Glasses,
+  Briefcase,
+  Shirt,
+  ShoppingBasket,
+  Hand,
+  Venus,
+} from "lucide-react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+
+const categories = [
   {
-    id: 1,
-    name: "T Shirts",
-    slag: "t-shirt",
+    name: "All",
+    icon: <ShoppingBasket className="w-4 h-4" />,
+    slug: "all",
   },
   {
-    id: 2,
-    name: "Shirts",
-    slag: "shirt",
+    name: "T-shirts",
+    icon: <Shirt className="w-4 h-4" />,
+    slug: "t-shirts",
   },
   {
-    id: 3,
-    name: "Jeans",
-    slag: "jeans",
+    name: "Shoes",
+    icon: <Footprints className="w-4 h-4" />,
+    slug: "shoes",
   },
   {
-    id: 4,
-    name: "Dress",
-    slag: "dress",
+    name: "Accessories",
+    icon: <Glasses className="w-4 h-4" />,
+    slug: "accessories",
   },
   {
-    id: 5,
-    name: "Dera",
-    slag: "dera",
+    name: "Bags",
+    icon: <Briefcase className="w-4 h-4" />,
+    slug: "bags",
+  },
+  {
+    name: "Dresses",
+    icon: <Venus className="w-4 h-4" />,
+    slug: "dresses",
+  },
+  {
+    name: "Jackets",
+    icon: <Shirt className="w-4 h-4" />,
+    slug: "jackets",
+  },
+  {
+    name: "Gloves",
+    icon: <Hand className="w-4 h-4" />,
+    slug: "gloves",
   },
 ];
 
 const CategoryMenu = () => {
-  return (
-    <div className="flex items-center gap-4 justify-center my-6">
-      <button className="rounded-full text-sm bg-primary text-primary-foreground border border-secondary rind-2 px-2 py-1 transition-color duration-500 ease-in-out cursor-pointer hover:bg-primary hover:text-primary-foreground">
-        All
-      </button>
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
 
-      {categoryMenu.map((category: Category) => (
-        <button
-          key={category.id}
-          className="rounded-full text-sm border border-secondary rind-2 px-2 py-1 transition-color duration-500 ease-in-out cursor-pointer hover:bg-primary hover:text-primary-foreground"
+  const selectedCategory = searchParams.get("category");
+
+  const handleCategoryClick = (value: string | null) => {
+    const params = new URLSearchParams(searchParams);
+    params.set("category", value || "all");
+    router.push(`${pathname}?${params.toString()}`, { scroll: false });
+  };
+  return (
+    <div className="grid grid-cols-2 place-items-center sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 gap-2 bg-secondary p-2 rounded-lg mb-4 text-sm">
+      {categories.map((category) => (
+        <div
+          key={category.name}
+          className={cn(
+            "rounded-full text-sm border border-secondary rind-2 px-4 py-1 transition-color duration-500 ease-in-out cursor-pointer hover:bg-primary hover:text-primary-foreground text center w-fit flex items-center gap-2",
+            selectedCategory === category.slug
+              ? "bg-primary text-primary-foreground"
+              : selectedCategory === null && category.slug === "all"
+              ? "bg-primary text-primary-foreground"
+              : "bg-secondary text-secondary-foreground"
+          )}
+          onClick={() => handleCategoryClick(category.slug)}
         >
+          {category.icon}
           {category.name}
-        </button>
+        </div>
       ))}
     </div>
   );
