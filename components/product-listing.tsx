@@ -1,6 +1,7 @@
 import { ProductsType } from "@/app/types";
 import CategoryMenu from "./category-menu";
 import ProductCard from "./product-card";
+import Link from "next/link";
 
 const products: ProductsType = [
   {
@@ -113,15 +114,21 @@ const products: ProductsType = [
   },
 ];
 
-const ProductListing = () => {
+const ProductListing = ({ category }: { category: string }) => {
   return (
     <div className="mt-5 w-full">
       <CategoryMenu />
-      <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-12">
+      <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-12">
         {products.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}
       </div>
+      <Link
+        href={category ? `/products/?category=${category}` : "/products"}
+        className="flex justify-end mt-4 underline text-sm"
+      >
+        View All Products
+      </Link>
     </div>
   );
 };

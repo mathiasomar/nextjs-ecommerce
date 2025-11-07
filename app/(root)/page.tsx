@@ -5,7 +5,12 @@ import HeroSection from "@/components/sections/hero-section";
 import SectionHeader from "@/components/sections/section-header";
 import { Separator } from "@/components/ui/separator";
 
-export default function Home() {
+const Home = async ({
+  searchParams,
+}: {
+  searchParams: Promise<{ category: string }>;
+}) => {
+  const category = (await searchParams).category;
   return (
     <div className="">
       {/* Hero Section */}
@@ -23,9 +28,11 @@ export default function Home() {
           <Separator className="my-4" />
 
           {/* Category Tab */}
-          <ProductListing />
+          <ProductListing category={category} />
         </Container>
       </section>
     </div>
   );
-}
+};
+
+export default Home;
