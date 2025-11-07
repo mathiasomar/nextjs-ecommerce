@@ -28,7 +28,7 @@ const Home = async ({
           <Separator className="my-4" />
 
           {/* Category Tab */}
-          <ProductListing category={category} />
+          <ProductListing category={category} params="homepage" />
         </Container>
       </section>
     </div>
