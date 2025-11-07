@@ -68,12 +68,12 @@ const CategoryMenu = () => {
     router.push(`${pathname}?${params.toString()}`, { scroll: false });
   };
   return (
-    <div className="grid grid-cols-2 place-items-center sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 gap-2 bg-secondary p-2 rounded-lg mb-4 text-sm">
+    <div className="grid grid-cols-2 gap-2 place-items-center place-content-center bg-secondary p-2 rounded-lg mb-4 text-sm sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8">
       {categories.map((category) => (
         <div
           key={category.name}
           className={cn(
-            "rounded-full text-sm border border-secondary rind-2 px-4 py-1 transition-color duration-500 ease-in-out cursor-pointer hover:bg-primary hover:text-primary-foreground text center w-fit flex items-center gap-2",
+            "rounded-full text-sm border border-secondary px-4 py-1 transition-color duration-500 ease-in-out cursor-pointer hover:bg-primary hover:text-primary-foreground w-fit flex items-center gap-2",
             selectedCategory === category.slug
               ? "bg-primary text-primary-foreground"
               : selectedCategory === null && category.slug === "all"
