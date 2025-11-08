@@ -1,6 +1,6 @@
 type headerProp = {
   title: string;
-  description: string;
+  description?: string;
 };
 
 const SectionHeader = ({ title, description }: headerProp) => {
