@@ -3,7 +3,7 @@ import Container from "./container";
 import Image from "next/image";
 import { SearchBar } from "./search-bar";
 import MobileMenu from "./mobile-menu";
-import { ShoppingBasket, ShoppingCart, User } from "lucide-react";
+import { ShoppingBasket, User } from "lucide-react";
 import { Badge } from "./ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -23,6 +23,7 @@ import {
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import UserLogout from "./user-logout";
+import ShoppingCartIcon from "./shopping-cart-icon";
 
 const Navbar = () => {
   return (
@@ -50,15 +51,7 @@ const Navbar = () => {
             </Link>
           </nav>
           <div className="flex items-center gap-4">
-            <Link href="/cart" className="relative">
-              <ShoppingCart />
-              <Badge
-                variant="destructive"
-                className="h-5 min-w-5 rounded-full px-1 font-mono tabular-nums absolute -top-2 -right-2 text-xs"
-              >
-                0
-              </Badge>
-            </Link>
+            <ShoppingCartIcon />
 
             {/* Profile */}
             {/* <DropdownMenu>
