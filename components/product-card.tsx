@@ -8,12 +8,16 @@ import Image from "next/image";
 import { ShoppingCart } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import useCartStore from "@/store/cart-store";
+import { toast } from "sonner";
 
 const ProductCard = ({ product }: { product: ProductType }) => {
   const [productType, setProductType] = useState({
     size: product.sizes[0],
     color: product.colors[0],
   });
+
+  const { addToCart } = useCartStore();
 
   const handleproductTypeChange = ({
     type,
@@ -23,6 +27,17 @@ const ProductCard = ({ product }: { product: ProductType }) => {
     value: string;
   }) => {
     setProductType((prev) => ({ ...prev, [type]: value }));
+  };
+
+  const handleAddToCart = () => {
+    addToCart({
+      ...product,
+      quantity: 1,
+      selectedSize: productType.size,
+      selectedColor: productType.color,
+    });
+
+    toast.success("Product Added to Cart", { position: "bottom-right" });
   };
   return (
     <Card className="w-full border-0 p-0">
@@ -103,6 +118,7 @@ const ProductCard = ({ product }: { product: ProductType }) => {
             variant="outline"
             size="sm"
             className="text-sm cursor-pointer w-full"
+            onClick={handleAddToCart}
           >
             <ShoppingCart className="w-4 h-4" />
             ADD TO CART

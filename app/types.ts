@@ -18,3 +18,13 @@ export type CartItemType = ProductType & {
 };
 
 export type CartItemsType = CartItemType[];
+
+export type CartStoreStateType = {
+  cart: CartItemsType;
+};
+
+export type CartStoreActionType = {
+  addToCart: (product: CartItemType) => void;
+  removeFromCart: (product: CartItemType) => void;
+  clearCart: () => void;
+};

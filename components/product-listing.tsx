@@ -126,7 +126,7 @@ const ProductListing = ({
     <div className="mt-5 w-full">
       <CategoryMenu />
       {params === "products" && <ProductFilter />}
-      <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-12">
+      <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-12">
         {products.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}
