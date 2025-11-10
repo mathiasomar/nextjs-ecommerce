@@ -29,7 +29,7 @@ const shippingFormShema = z.object({
   city: z.string().min(1, "City is required!"),
 });
 
-type ShippingFormInputs = z.infer<typeof shippingFormShema>;
+export type ShippingFormInputs = z.infer<typeof shippingFormShema>;
 
 const ShippingForm = ({
   setShippingForm,

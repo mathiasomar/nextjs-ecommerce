@@ -4,7 +4,7 @@ import { CartItemsType } from "@/app/types";
 import Container from "@/components/container";
 import PaymentForm from "@/components/payment-form";
 import SectionHeader from "@/components/sections/section-header";
-import ShippingForm from "@/components/shipping-form";
+import ShippingForm, { ShippingFormInputs } from "@/components/shipping-form";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -89,7 +89,7 @@ const cartItems: CartItemsType = [
 const CartPage = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const [shippingForm, setShippingForm] = useState(null);
+  const [shippingForm, setShippingForm] = useState<ShippingFormInputs>();
 
   const activeStep = parseInt(searchParams.get("step") || "1");
   return (
