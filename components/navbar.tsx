@@ -43,6 +43,9 @@ const Navbar = () => {
             <Link href="/" className="text-sm">
               Home
             </Link>
+            <Link href="/products" className="text-sm">
+              Products
+            </Link>
             <Link href="/about" className="text-sm">
               About Us
             </Link>
