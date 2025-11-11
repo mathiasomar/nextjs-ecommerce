@@ -4,10 +4,21 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Container from "../container";
 
+const imageURL =
+  "https://jevelin.shufflehound.com/fashion-shop/wp-content/uploads/sites/27/2018/03/Rectangle-331-copy-woman.jpg";
+
 export default function HeroSection() {
   return (
     <>
-      <section className="bg-white w-full overflow-x h-auto md:h-[calc(100vh-4rem)]">
+      <section
+        className="w-full overflow-x h-auto md:h-[calc(100vh-4rem)]"
+        style={{
+          backgroundImage: `url(${imageURL})`,
+          backgroundAttachment: "fixed",
+          backgroundPosition: "center",
+          backgroundSize: "cover",
+        }}
+      >
         <Container className="h-full">
           <div className="w-full h-full flex flex-col md:flex-row items-center lg:items-stretch gap-6">
             <div className="w-full md:w-1/2 h-full text-center md:text-left flex flex-col justify-center items-center md:items-start">
@@ -34,7 +45,7 @@ export default function HeroSection() {
             <div className="hidden md:flex lg:w-1/2 h-full items-center justify-center">
               <div className="w-full max-w-lg">
                 <Image
-                  src="/hero-1.jpg"
+                  src="https://jevelin.shufflehound.com/fashion-shop/wp-content/uploads/sites/27/2018/03/1.jpg"
                   alt="Featured product"
                   width={800}
                   height={800}
