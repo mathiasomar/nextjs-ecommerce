@@ -83,8 +83,9 @@ export default function LoginPage() {
           ? error.message
           : "An unexpected error occurred. Please try again."
       );
-    } finally {
       setGoogleLoading(false);
+    } finally {
+      toast.info("Login successful! Redirecting to dashboard...");
     }
   };
 
